@@ -1,4 +1,4 @@
-// $Id: COPYRIGHT.txt,v 1.2.2.3 2010/08/06 10:58:29 goba Exp $
+// $Id: COPYRIGHT.txt,v 1.6 2010/01/02 10:20:21 dries Exp $
 
 All Drupal code is Copyright 2001 - 2010 by the original authors.
 
@@ -8,7 +8,7 @@ the Free Software Foundation.
 
 This program is distributed in the hope that it will be useful, but
 WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 for more details.
 
 You should have received a copy of the GNU General Public License

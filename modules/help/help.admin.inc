@@ -1,5 +1,5 @@
 <?php
-// $Id: help.admin.inc,v 1.5 2007/11/25 11:11:17 goba Exp $
+// $Id: help.admin.inc,v 1.13 2010/10/01 15:24:18 webchick Exp $
 
 /**
  * @file
@@ -11,8 +11,8 @@
  */
 function help_main() {
   // Add CSS
-  drupal_add_css(drupal_get_path('module', 'help') .'/help.css', 'module', 'all', FALSE);
-  $output = '<h2>'. t('Help topics') .'</h2><p>'. t('Help is available on the following items:') .'</p>'. help_links_as_list();
+  drupal_add_css(drupal_get_path('module', 'help') . '/help.css');
+  $output = '<h2>' . t('Help topics') . '</h2><p>' . t('Help is available on the following items:') . '</p>' . help_links_as_list();
   return $output;
 }
 
@@ -22,12 +22,12 @@ function help_main() {
 function help_page($name) {
   $output = '';
   if (module_hook($name, 'help')) {
-    $module = drupal_parse_info_file(drupal_get_path('module', $name) .'/'. $name .'.info');
-    drupal_set_title($module['name']);
+    $info = system_get_info('module');
+    drupal_set_title($info[$name]['name']);
 
     $temp = module_invoke($name, 'help', "admin/help#$name", drupal_help_arg());
     if (empty($temp)) {
-      $output .= t("No help is available for module %module.", array('%module' => $module['name']));
+      $output .= t("No help is available for module %module.", array('%module' => $info[$name]['name']));
     }
     else {
       $output .= $temp;
@@ -35,19 +35,21 @@ function help_page($name) {
 
     // Only print list of administration pages if the module in question has
     // any such pages associated to it.
-    $admin_tasks = system_get_module_admin_tasks($name);
+    $admin_tasks = system_get_module_admin_tasks($name, $info[$name]);
     if (!empty($admin_tasks)) {
-      ksort($admin_tasks);
-      $output .= theme('item_list', $admin_tasks, t('@module administration pages', array('@module' => $module['name'])));
+      $links = array();
+      foreach ($admin_tasks as $task) {
+        $links[] = l($task['title'], $task['link_path'], $task['localized_options']);
+      }
+      $output .= theme('item_list', array('items' => $links, 'title' => t('@module administration pages', array('@module' => $info[$name]['name']))));
     }
-
   }
   return $output;
 }
 
 function help_links_as_list() {
   $empty_arg = drupal_help_arg();
-  $module_info = module_rebuild_cache();
+  $module_info = system_rebuild_module_data();
 
   $modules = array();
   foreach (module_implements('help', TRUE) as $module) {
@@ -60,12 +62,12 @@ function help_links_as_list() {
   // Output pretty four-column list
   $count = count($modules);
   $break = ceil($count / 4);
-  $output = '<div class="clear-block"><div class="help-items"><ul>';
+  $output = '<div class="clearfix"><div class="help-items"><ul>';
   $i = 0;
   foreach ($modules as $module => $name) {
-    $output .= '<li>'. l($name, 'admin/help/'. $module) .'</li>';
+    $output .= '<li>' . l($name, 'admin/help/' . $module) . '</li>';
     if (($i + 1) % $break == 0 && ($i + 1) != $count) {
-      $output .= '</ul></div><div class="help-items'. ($i + 1 == $break * 3 ? ' help-items-last' : '') .'"><ul>';
+      $output .= '</ul></div><div class="help-items' . ($i + 1 == $break * 3 ? ' help-items-last' : '') . '"><ul>';
     }
     $i++;
   }
