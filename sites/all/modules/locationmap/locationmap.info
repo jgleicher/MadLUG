@@ -1,0 +1,18 @@
+; $Id: locationmap.info,v 1.1.2.1 2011/01/05 11:12:45 dbabbage Exp $ 
+name = Location Map
+description = Display one geographical location via Google Maps.
+core = 7.x
+
+files[] = locationmap.install
+files[] = locationmap.module
+files[] = potx-cli.php
+files[] = potx.inc
+files[] = tests/locationmap.test
+
+configure = admin/config/locationmap
+; Information added by drupal.org packaging script on 2011-01-05
+version = "7.x-1.0"
+core = "7.x"
+project = "locationmap"
+datestamp = "1294226468"
+
